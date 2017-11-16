@@ -1,0 +1,38 @@
+# Ejercicio 1
+
+## Encontrar el top 5 de fabricantes por número de aviones en el fichero optd_aircraft.csv. Cada fila es un avión. 
+
+## Resolver usando comandos Unix estándar (difícil) 
+
+#solución
+cut -d '^' -f 2 optd_aircraft.csv | tail -n +2 | uniq -c | sort -n -r | head -5
+
+## Resolver usando csvkit (más sencillo)
+
+#solución
+csvcut -d '^' -c manufacturer optd_aircraft.csv | csvstat
+## Me da un resultado diferente entre ambas formas de hacerlo, con lo que creo que el segundo (csvkit) no es correcto por algun motivo que no sé.
+
+# Ejercicio 2:
+
+## Encontrar el número de fabricantes con aviones de 4 motores, usando csvkit.
+
+#solución
+csvcut -d '^' -c manufacturer,nb_engines optd_aircraft.csv | grep 4 | sort | uniq | wc -l 
+
+
+## Extra: convertir tu solución en un script genérico que acepte un argumento N, y calcule el número de aviones con N motores. Para ver cómo escribir un script: http://linuxcommand.org/lc3_wss0010.php (si pasamos un número a un script, ese argumento se guarda en una variable de nombre $@)
+
+#solución: pendiente
+
+# Ejercicio 3:
+
+## Con los ficheros de aerolíneas (el de optd y el fichero ref...), hacer un join. 
+## De las aerolíneas contenidas en el fichero ref, encontrar cuántas aerolíneas no tienen valores en el fichero de optd
+
+#solución
+csvjoin -d '^' -c 2char_code,airline_code_2c --left optd_airlines.csv ref_airline_nb_of_flights.csv | csvcut -c 2char_code,airline_code_2c | csvgrep -c airline_code_2c -r "$" | sort | uniq | wc -l
+
+
+
+
